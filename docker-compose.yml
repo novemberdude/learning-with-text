@@ -4,11 +4,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: "webserver"
-    image: "hungpm/learningwithtext:1.0.0"
+    image: hungpm/learningwithtext:1.0.0
     ports:
       - 8001:80
     tty: True
+    volumes:
+     - "/etc/localtime:/etc/localtime:ro"
+     - "/etc/timezone:/etc/timezone:ro"
+  database:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    image: mysql:8.0.27
+    volumes:
+     - "/etc/localtime:/etc/localtime:ro"
+     - "/etc/timezone:/etc/timezone:ro"
+     - "./data:/var/lib/mysql"
+  phpmyadmin:
+    environment:
+       PMA_HOST: database
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+    - "8002:80"
     volumes:
      - "/etc/localtime:/etc/localtime:ro"
      - "/etc/timezone:/etc/timezone:ro"
