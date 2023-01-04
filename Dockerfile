@@ -1,13 +1,11 @@
-FROM python:3.9
+FROM ubuntu:20.04
 
-WORKDIR /app
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y libapache2-mod-php \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y php-mysql
 
-ENV LANG=C.UTF-8 \
-    PYTHONIOENCODING=UTF-8 \
-    PYTHONPATH=/app/src
+COPY lwt_v_2_0_3 /var/www/html
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY src ./src
+EXPOSE 80
 
-CMD cd src && python3 main.py
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
